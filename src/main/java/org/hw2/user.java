@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 class Main {
+
     public static void main(String[] args) {
         List<User> users = readUsersFromFile("users.txt");
 
@@ -12,7 +13,31 @@ class Main {
             System.out.println("Name: " + user.getName() + ", Age: " + user.getAge());
         }
 
-        try (BufferedWriter writer = new BufferedWriter(new FileWriter("user.json"))) {
+        writeUsersToJson(users, "user.json");
+    }
+
+    public static List<User> readUsersFromFile(String fileName) {
+        List<User> users = new ArrayList<>();
+
+        try (BufferedReader br = new BufferedReader(new FileReader(fileName))) {
+            br.readLine();
+            String line;
+
+            while ((line = br.readLine()) != null) {
+                String[] parts = line.split(" ");
+                String name = parts[0];
+                int age = Integer.parseInt(parts[1]);
+                users.add(new User(name, age));
+            }
+        } catch (IOException | NumberFormatException e) {
+            e.printStackTrace();
+        }
+
+        return users;
+    }
+
+    public static void writeUsersToJson(List<User> users, String fileName) {
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(fileName))) {
             writer.write("[\n");
             for (int i = 0; i < users.size(); i++) {
                 User user = users.get(i);
@@ -27,27 +52,8 @@ class Main {
             }
             writer.write("]\n");
         } catch (IOException e) {
-            System.out.println(e.getMessage());
-        }
-    }
-
-    public static List<User> readUsersFromFile(String fileName) {
-        List<User> users = new ArrayList<>();
-
-        try (BufferedReader br = new BufferedReader(new FileReader(fileName))) {
-            String line = br.readLine();
-
-            while ((line = br.readLine()) != null) {
-                String[] parts = line.split(" ");
-                String name = parts[0];
-                int age = Integer.parseInt(parts[1]);
-                users.add(new User(name, age));
-            }
-        } catch (IOException | NumberFormatException e) {
             e.printStackTrace();
         }
-
-        return users;
     }
 }
 

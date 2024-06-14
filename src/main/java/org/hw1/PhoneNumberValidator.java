@@ -7,21 +7,19 @@ import java.util.regex.Pattern;
 
 public class PhoneNumberValidator {
 
+    private static final Pattern pattern1 = Pattern.compile("^\\(\\d{3}\\) \\d{3}-\\d{4}$");
+    private static final Pattern pattern2 = Pattern.compile("^\\d{3}-\\d{3}-\\d{4}$");
+
     public static void main(String[] args) {
         String fileName = "file.txt";
         printValidPhoneNumbers(fileName);
     }
 
     public static void printValidPhoneNumbers(String fileName) {
-
-        String pattern1 = "^\\(\\d{3}\\) \\d{3}-\\d{4}$";
-        String pattern2 = "^\\d{3}-\\d{3}-\\d{4}$";
-
         try (BufferedReader br = new BufferedReader(new FileReader(fileName))) {
             String line;
             while ((line = br.readLine()) != null) {
-
-                if (Pattern.matches(pattern1, line) || Pattern.matches(pattern2, line)) {
+                if (pattern1.matcher(line).matches() || pattern2.matcher(line).matches()) {
                     System.out.println(line);
                 }
             }
